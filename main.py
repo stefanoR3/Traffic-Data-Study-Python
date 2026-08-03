@@ -1,5 +1,6 @@
 import requests
 import json
+from database import ORM_db
 
 class incident:
     def __init__(self, type:str, properties:dict, events:dict, tmc: dict, geometry:dict):
@@ -71,13 +72,25 @@ class incident:
 
 def get_reports():
     #POST request with ID's
-    request_url = 'https://api.tomtom.com/traffic/services/5/incidentDetails?key=ptHPCU6tTJyLLvW6nhVa8aChAyVz5KsL&bbox=4.8854592519716675,52.36934334773164,4.897883244144765,52.37496348620152&fields={incidents{type,geometry{type,coordinates},properties{id,iconCategory,magnitudeOfDelay,events{description,code,iconCategory},startTime,endTime,from,to,length,delay,roadNumbers,timeValidity,probabilityOfOccurrence,numberOfReports,lastReportTime,tmc{countryCode,tableNumber,tableVersion,direction,points{location,offset}}}}}&language=en-GB&t=1111&timeValidityFilter=present'
-    response = requests.get(request_url)
+    scheme = 'http'
+    domain = 'api.tomtom.com'
+    path = '/traffic/services/5/incidentDetails'
+    key = 'key=ptHPCU6tTJyLLvW6nhVa8aChAyVz5KsL'
+    bbox = '&bbox=4.8854592519716675,52.36934334773164,4.897883244144765,52.37496348620152'
+    fields = '&fields={incidents{type,geometry{type,coordinates},properties{id,iconCategory,magnitudeOfDelay,events{description,code,iconCategory},' \
+    'startTime,endTime,from,to,length,delay,roadNumbers,timeValidity,probabilityOfOccurrence,numberOfReports,lastReportTime,tmc{countryCode,tableNumber,' \
+    'tableVersion,direction,points{location,offset}}}}}'
+    language = '&language=en-GB&t=1111'
+    filter = '&timeValidityFilter=present'
+    req_url = scheme + '://' + domain + path + '?' + key + bbox + fields + language + filter
+    print(req_url)
+    response = requests.get(req_url)
     json_response = response.json()
     response.raise_for_status()
-    with open('json_file.json', 'r') as f:
-        json.dump(f,json_response, indent=2)
+    with open('json_file.json', 'w') as f:
+        json.dump(json_response,f, indent=2)
 
+#get_reports()
 with open('json_file.json', 'r') as f:
     reports = json.load(f)
 
@@ -87,7 +100,9 @@ for report in incidents:
     new_incident = incident(report.get('type'), report.get('properties'), report.get('events'), report.get('tmc'), report.get('geometry'))
     reports_collection.append(new_incident)
 
-for x in reports_collection:
-    x.display_report()
+#for x in reports_collection:
+    #x.display_report()
 
 #next: SQL connections SQLAlchemy, request pack(to read), URL Divide
+
+ORM_db()
