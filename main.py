@@ -1,6 +1,6 @@
 import requests
 import json
-from database import ORM_db
+import db
 
 class incident:
     def __init__(self, type:str, properties:dict, events:dict, tmc: dict, geometry:dict):
@@ -94,15 +94,16 @@ def get_reports():
 with open('json_file.json', 'r') as f:
     reports = json.load(f)
 
-reports_collection = []
-incidents = reports.get('incidents')
-for report in incidents:
-    new_incident = incident(report.get('type'), report.get('properties'), report.get('events'), report.get('tmc'), report.get('geometry'))
-    reports_collection.append(new_incident)
-
-#for x in reports_collection:
-    #x.display_report()
+#get_reports()
+with open('json_file.json', 'r') as f:
+    reports = json.load(f)
 
 #next: SQL connections SQLAlchemy, request pack(to read), URL Divide
+#def data_fetch()
 
-ORM_db()
+get_reports()
+#db.data_transfer()
+#db.data_fetch()
+
+
+
