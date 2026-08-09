@@ -8,15 +8,15 @@
         "magnitudeOfDelay": 4,
         "startTime": "2026-08-03T04:00:00Z",
         "endTime": "2027-01-10T20:00:00Z",
-        "from": "Hartenstraat / Reestraat",
+        "from": "Raadhuisstraat",
         "to": "Leliegracht",
-        "length": 355.937,
+        "length": 168.6,
         "delay": null,
         "roadNumbers": [],
         "timeValidity": "present",
         "probabilityOfOccurrence": "certain",
-        "numberOfReports": 1,
-        "lastReportTime": "2026-05-07T10:06:30Z",
+        "numberOfReports": null,
+        "lastReportTime": null,
         "events": [
           {
             "code": 401,
@@ -34,18 +34,6 @@
       "geometry": {
         "type": "LineString",
         "coordinates": [
-          [
-            4.8851555178,
-            52.3723384836
-          ],
-          [
-            4.8853030393,
-            52.3738539707
-          ],
-          [
-            4.885312427,
-            52.3739330826
-          ],
           [
             4.8853204737,
             52.3740202284
@@ -99,12 +87,12 @@
         "endTime": "2027-02-27T23:00:00Z",
         "from": "Nassaukade - s100 (De Clercqstraat/v100-CR3)",
         "to": "Nieuwezijds Voorburgwal - Nieuwezijds Voorburgwal (Raadhuisstraat/v100-CR3)",
-        "length": 396.832661247,
+        "length": 298.6170630673,
         "delay": null,
         "roadNumbers": [],
         "timeValidity": "present",
         "probabilityOfOccurrence": "certain",
-        "numberOfReports": 11,
+        "numberOfReports": 4,
         "lastReportTime": "2026-05-07T10:06:30Z",
         "events": [
           {
@@ -125,7 +113,7 @@
             },
             {
               "location": 55329,
-              "offset": 535
+              "offset": 634
             }
           ]
         }
@@ -133,22 +121,6 @@
       "geometry": {
         "type": "LineString",
         "coordinates": [
-          [
-            4.8814768681,
-            52.3735401312
-          ],
-          [
-            4.8817035148,
-            52.3736004635
-          ],
-          [
-            4.8819046805,
-            52.3736501006
-          ],
-          [
-            4.8826355824,
-            52.3738338089
-          ],
           [
             4.8828126082,
             52.3738794032
@@ -264,6 +236,134 @@
           [
             4.8869043181,
             52.373369829
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "TTI-67f0f707-54cd-41e1-8dc2-49de8cb7612d-TTR36261123408014001",
+        "iconCategory": 8,
+        "magnitudeOfDelay": 4,
+        "startTime": "2026-08-07T10:31:30Z",
+        "endTime": null,
+        "from": "Gasthuismolensteeg / Hartenstraat",
+        "to": "Raadhuisstraat",
+        "length": 120.6715762991,
+        "delay": null,
+        "roadNumbers": [],
+        "timeValidity": "present",
+        "probabilityOfOccurrence": "probable",
+        "numberOfReports": null,
+        "lastReportTime": null,
+        "events": [
+          {
+            "code": 401,
+            "description": "Closed",
+            "iconCategory": 8
+          }
+        ],
+        "tmc": null
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            4.8873053083,
+            52.3722486223
+          ],
+          [
+            4.8874353955,
+            52.3733309378
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "TTI-67f0f707-54cd-41e1-8dc2-49de8cb7612d-TTL36261123548011002",
+        "iconCategory": 6,
+        "magnitudeOfDelay": 3,
+        "startTime": "2026-08-07T14:11:30Z",
+        "endTime": "2026-08-07T14:32:00Z",
+        "from": "Muntplein / Nieuwe Doelenstraat",
+        "to": "Damrak",
+        "length": 219.4314340319,
+        "delay": 207,
+        "roadNumbers": [],
+        "timeValidity": "present",
+        "probabilityOfOccurrence": "certain",
+        "numberOfReports": null,
+        "lastReportTime": null,
+        "events": [
+          {
+            "code": 101,
+            "description": "Stationary traffic",
+            "iconCategory": 6
+          }
+        ],
+        "tmc": null
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            4.8924296687,
+            52.3698788984
+          ],
+          [
+            4.8924739251,
+            52.3699499828
+          ],
+          [
+            4.8925704846,
+            52.3701484964
+          ],
+          [
+            4.8926348577,
+            52.3703295068
+          ],
+          [
+            4.8927394638,
+            52.3707090788
+          ],
+          [
+            4.8927609215,
+            52.3707935698
+          ],
+          [
+            4.892793108,
+            52.3708954603
+          ],
+          [
+            4.8928293178,
+            52.3710402868
+          ],
+          [
+            4.8928346822,
+            52.3710644415
+          ],
+          [
+            4.8928601632,
+            52.3711851639
+          ],
+          [
+            4.8928775976,
+            52.3713179121
+          ],
+          [
+            4.8928869853,
+            52.371393037
+          ],
+          [
+            4.8928655276,
+            52.3717202482
+          ],
+          [
+            4.8928521166,
+            52.3718221878
           ]
         ]
       }

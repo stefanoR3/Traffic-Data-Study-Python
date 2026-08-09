@@ -1,6 +1,7 @@
 import requests
 import json
 import db
+import pandas as pd
 
 class incident:
     def __init__(self, type:str, properties:dict, events:dict, tmc: dict, geometry:dict):
@@ -95,15 +96,70 @@ with open('json_file.json', 'r') as f:
     reports = json.load(f)
 
 #get_reports()
-with open('json_file.json', 'r') as f:
-    reports = json.load(f)
-
-#next: SQL connections SQLAlchemy, request pack(to read), URL Divide
-#def data_fetch()
-
-get_reports()
 #db.data_transfer()
 #db.data_fetch()
+
+#next: pandas
+
+#to fix: only the data good in the json(bug fix)
+with open('json_file.json', 'r') as f:
+    reports = json.load(f)
+    reports = reports['incidents']
+    id = []
+    icon_category = []
+    magnitude_of_delay = []
+    start_time = []
+    end_time = []
+    frm = []
+    to = []
+    length = []
+    delay = []
+    probability = []
+    number_of_reports = []
+    last_report_time = []
+    events = []
+    coordinates = []
+    for report in reports:
+        id.append(report['properties'].get('id'))
+        icon_category.append(report['properties'].get('iconCategory'))
+        magnitude_of_delay.append(report['properties'].get('magnitudeOfDelay'))
+        start_time.append(report['properties'].get('startTime'))
+        end_time.append(report['properties'].get('endTIme'))
+        frm.append(report['properties'].get('from'))
+        to.append(report['properties'].get('to'))
+        length.append(report['properties'].get('length'))
+        delay.append(report['properties'].get('delay'))
+        probability.append(report['properties'].get('probability'))
+        number_of_reports.append(report['properties'].get('numberOfReports'))
+        last_report_time.append(report['properties'].get('lastReportTime'))
+        events.append(report['properties'].get('events'))
+        coordinates.append(report['properties'].get('coordinates'))
+    df_dictionary = {
+        'id': id,
+        'icon_category': icon_category,
+        'magnitude_of_delay': magnitude_of_delay,
+        'start_time': start_time,
+        'end_time': end_time,
+        'from': frm,
+        'to': to,
+        'length': length,
+        'delay': delay,
+        'probability': probability,
+        'number_of_reports': number_of_reports,
+        'last_report_time': last_report_time,
+        'events': events,
+        'coordinates': coordinates
+    }
+
+    df = pd.DataFrame(df_dictionary)
+    print(df['from'])
+
+
+    #print(mydataset)
+
+
+
+
 
 
 

@@ -20,7 +20,7 @@ incidents_info = Table(
     "incident_info",
     metadata_obj,
     Column("id", Integer, primary_key=True, autoincrement=True),
-    Column("incident_id", Integer, ForeignKey("incident_header.id"), nullable=False),
+    Column("incident_id", ForeignKey("incident_header.id"), nullable=False),
     Column("icon_category", Integer),
     Column("start_time", String(21)),
     Column("end_time", String(21)),
@@ -43,14 +43,17 @@ def data_transfer():
             try:
                 for json_report in reports['incidents']:
                     properties = json_report['properties']
-                    stmt_table = insert(incidents_table).values(id=properties['id'], type=json_report['type'])
+                    id_for_both = properties['id']
+                    stmt_table = insert(incidents_table).values(id=id_for_both, type=json_report['type'])
                     conn.execute(stmt_table)
-                    stmt_info = insert(incidents_info).values(incident_id=properties['id'], icon_category=properties['iconCategory'],
+                    stmt_info = insert(incidents_info).values(incident_id=id_for_both, icon_category=properties['iconCategory'],
                         start_time = properties['startTime'], end_time = properties['endTime'], frm = properties['from'], too = properties['to'],
-                            length = properties['length'], delay = properties['delay'], number_of_reports = properties['numberOfReports'])
+                        length = properties['length'], delay = properties['delay'], number_of_reports = properties['numberOfReports'])
                     conn.execute(stmt_info)
                     conn.commit()
             except Exception as ex:
+                print('error trying to insert the following report:')
+                print(f"id:{id_for_both}\n")
                 print(ex.args)
 
 def data_fetch():
