@@ -3,6 +3,8 @@ import json
 import db
 import pandas as pd
 
+#tom tom gives json, any language can parse it (java, python etc!)
+
 class incident:
     def __init__(self, type:str, properties:dict, events:dict, tmc: dict, geometry:dict):
        self.type: str = type
@@ -101,62 +103,92 @@ with open('json_file.json', 'r') as f:
 
 #next: pandas
 
-#to fix: only the data good in the json(bug fix)
-with open('json_file.json', 'r') as f:
-    reports = json.load(f)
-    reports = reports['incidents']
-    id = []
-    icon_category = []
-    magnitude_of_delay = []
-    start_time = []
-    end_time = []
-    frm = []
-    to = []
-    length = []
-    delay = []
-    probability = []
-    number_of_reports = []
-    last_report_time = []
-    events = []
-    coordinates = []
-    for report in reports:
-        id.append(report['properties'].get('id'))
-        icon_category.append(report['properties'].get('iconCategory'))
-        magnitude_of_delay.append(report['properties'].get('magnitudeOfDelay'))
-        start_time.append(report['properties'].get('startTime'))
-        end_time.append(report['properties'].get('endTIme'))
-        frm.append(report['properties'].get('from'))
-        to.append(report['properties'].get('to'))
-        length.append(report['properties'].get('length'))
-        delay.append(report['properties'].get('delay'))
-        probability.append(report['properties'].get('probability'))
-        number_of_reports.append(report['properties'].get('numberOfReports'))
-        last_report_time.append(report['properties'].get('lastReportTime'))
-        events.append(report['properties'].get('events'))
-        coordinates.append(report['properties'].get('coordinates'))
-    df_dictionary = {
-        'id': id,
-        'icon_category': icon_category,
-        'magnitude_of_delay': magnitude_of_delay,
-        'start_time': start_time,
-        'end_time': end_time,
-        'from': frm,
-        'to': to,
-        'length': length,
-        'delay': delay,
-        'probability': probability,
-        'number_of_reports': number_of_reports,
-        'last_report_time': last_report_time,
-        'events': events,
-        'coordinates': coordinates
-    }
+#retrieve properties from json into lists -> into dictionary, for dataFrame init
+def initialize_dataFrame():
+    with open('json_file.json', 'r') as f:
+        try:
+            reports = json.load(f)
+            reports = reports['incidents']
+            id:list[str] = []
+            icon_category:list[int] = []
+            magnitude_of_delay:list[int] = []
+            start_time:list[str] = []
+            end_time:list[str] = []
+            frm:list[str] = []
+            to:list[str] = []
+            length:list[float] = []
+            delay:list[float] = []
+            probability:list[str] = []
+            number_of_reports:list[int] = []
+            last_report_time:list[str] = []
+            events:list[dict] = []
+            coordinates:list[list] = []
 
-    df = pd.DataFrame(df_dictionary)
-    print(df['from'])
+            for report in reports:
+                id.append(report['properties'].get('id'))
+                icon_category.append(report['properties'].get('iconCategory'))
+                magnitude_of_delay.append(report['properties'].get('magnitudeOfDelay'))
+                start_time.append(report['properties'].get('startTime'))
+                end_time.append(report['properties'].get('endTime'))
+                frm.append(report['properties'].get('from'))
+                to.append(report['properties'].get('to'))
+                length.append(report['properties'].get('length'))
+                delay.append(report['properties'].get('delay'))
+                probability.append(report['properties'].get('probabilityOfOccurrence'))
+                number_of_reports.append(report['properties'].get('numberOfReports'))
+                last_report_time.append(report['properties'].get('lastReportTime'))
+                events.append(report['properties'].get('events'))
+                coordinates.append(report['geometry'].get('coordinates'))
 
+            df_dictionary = {
+                'id': id,
+                'icon_category': icon_category,
+                'magnitude_of_delay': magnitude_of_delay,
+                'start_time': start_time,
+                'end_time': end_time,
+                'from': frm,
+                'to': to,
+                'length': length,
+                'delay': delay,
+                'probability': probability,
+                'number_of_reports': number_of_reports,
+                'last_report_time': last_report_time,
+                'events': events,
+                'coordinates': coordinates
+            }
 
-    #print(mydataset)
+        except Exception as ex:
+            print('Error trying to parse data into dataFrame: ', ex)
+        finally:
+            f.close()
+    return pd.DataFrame(df_dictionary)
 
+#functions receive references
+#it depends on the object being mutable or non-mutable
+
+#dataframe is a mutable objects so it modifies the actual value
+#(duplicates are managed by primary key constraint in the db section)
+def clean_dataFrame(df:pd.DataFrame):
+    df.fillna({'delay':0.0}, inplace=True)
+    df.fillna({'number_of_reports':0.0}, inplace=True)
+    df.fillna({'last_report_time':'no value'}, inplace=True)
+
+    #convert into pandas datetime (see documentation)
+    df['start_time'] = pd.to_datetime(df['start_time'], errors = 'coerce',  format = 'ISO8601')
+    df['end_time'] = pd.to_datetime(df['end_time'],errors = 'coerce', format = 'ISO8601')
+    #df.dropna(inplace=True) #safety measure, removes no end_date
+
+df = initialize_dataFrame()
+clean_dataFrame(df)
+#print(df['end_time'])
+#print(df['id'].duplicated())
+print(df.info())
+
+#recap ds, read pandas package overview
+
+get_reports()
+db.data_transfer()
+db.data_fetch()
 
 
 

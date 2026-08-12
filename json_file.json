@@ -3,11 +3,11 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "TTI-67f0f707-54cd-41e1-8dc2-49de8cb7612d-TTR36261123416022001",
+        "id": "TTI-6a58c161-5b55-4c19-8e5e-f022ca12dcbd-TTR36261123416022002",
         "iconCategory": 8,
         "magnitudeOfDelay": 4,
         "startTime": "2026-08-03T04:00:00Z",
-        "endTime": "2027-01-10T20:00:00Z",
+        "endTime": "2027-01-10T19:00:00Z",
         "from": "Raadhuisstraat",
         "to": "Leliegracht",
         "length": 168.6,
@@ -80,301 +80,10 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "TTI-67f0f707-54cd-41e1-8dc2-49de8cb7612d-TTR36261123440019000",
+        "id": "TTI-6a58c161-5b55-4c19-8e5e-f022ca12dcbd-TTR36261123524014001",
         "iconCategory": 8,
         "magnitudeOfDelay": 4,
-        "startTime": "2026-04-28T04:51:30Z",
-        "endTime": "2027-02-27T23:00:00Z",
-        "from": "Nassaukade - s100 (De Clercqstraat/v100-CR3)",
-        "to": "Nieuwezijds Voorburgwal - Nieuwezijds Voorburgwal (Raadhuisstraat/v100-CR3)",
-        "length": 298.6170630673,
-        "delay": null,
-        "roadNumbers": [],
-        "timeValidity": "present",
-        "probabilityOfOccurrence": "certain",
-        "numberOfReports": 4,
-        "lastReportTime": "2026-05-07T10:06:30Z",
-        "events": [
-          {
-            "code": 401,
-            "description": "Closed",
-            "iconCategory": 8
-          }
-        ],
-        "tmc": {
-          "countryCode": "8",
-          "tableNumber": "17",
-          "tableVersion": "10.3",
-          "direction": "positive",
-          "points": [
-            {
-              "location": 55330,
-              "offset": 188
-            },
-            {
-              "location": 55329,
-              "offset": 634
-            }
-          ]
-        }
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            4.8828126082,
-            52.3738794032
-          ],
-          [
-            4.8829158733,
-            52.3739062685
-          ],
-          [
-            4.8829775641,
-            52.373921006
-          ],
-          [
-            4.8830365727,
-            52.3739357436
-          ],
-          [
-            4.883091558,
-            52.3739464897
-          ],
-          [
-            4.8831881175,
-            52.3739666003
-          ],
-          [
-            4.8833316157,
-            52.3739934144
-          ],
-          [
-            4.8834321985,
-            52.3739974569
-          ],
-          [
-            4.8835596034,
-            52.3739987874
-          ],
-          [
-            4.8838908563,
-            52.3739987874
-          ],
-          [
-            4.8840906808,
-            52.3739974569
-          ],
-          [
-            4.8842154036,
-            52.3739961265
-          ],
-          [
-            4.8843387852,
-            52.3739920839
-          ],
-          [
-            4.8843964527,
-            52.3739894229
-          ],
-          [
-            4.8847223411,
-            52.3739826683
-          ],
-          [
-            4.8849208245,
-            52.3739733038
-          ],
-          [
-            4.8850187252,
-            52.3739692612
-          ],
-          [
-            4.88517027,
-            52.3739531932
-          ],
-          [
-            4.885312427,
-            52.3739330826
-          ],
-          [
-            4.8854049633,
-            52.3739169634
-          ],
-          [
-            4.8854747007,
-            52.3738981833
-          ],
-          [
-            4.885529686,
-            52.3738794032
-          ],
-          [
-            4.8856088111,
-            52.3738458855
-          ],
-          [
-            4.886236448,
-            52.3735522079
-          ],
-          [
-            4.8863303254,
-            52.3735159778
-          ],
-          [
-            4.8864309082,
-            52.3734797989
-          ],
-          [
-            4.8865086923,
-            52.3734529333
-          ],
-          [
-            4.8867179046,
-            52.3734046776
-          ],
-          [
-            4.8869043181,
-            52.373369829
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "TTI-67f0f707-54cd-41e1-8dc2-49de8cb7612d-TTR36261123408014001",
-        "iconCategory": 8,
-        "magnitudeOfDelay": 4,
-        "startTime": "2026-08-07T10:31:30Z",
-        "endTime": null,
-        "from": "Gasthuismolensteeg / Hartenstraat",
-        "to": "Raadhuisstraat",
-        "length": 120.6715762991,
-        "delay": null,
-        "roadNumbers": [],
-        "timeValidity": "present",
-        "probabilityOfOccurrence": "probable",
-        "numberOfReports": null,
-        "lastReportTime": null,
-        "events": [
-          {
-            "code": 401,
-            "description": "Closed",
-            "iconCategory": 8
-          }
-        ],
-        "tmc": null
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            4.8873053083,
-            52.3722486223
-          ],
-          [
-            4.8874353955,
-            52.3733309378
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "TTI-67f0f707-54cd-41e1-8dc2-49de8cb7612d-TTL36261123548011002",
-        "iconCategory": 6,
-        "magnitudeOfDelay": 3,
-        "startTime": "2026-08-07T14:11:30Z",
-        "endTime": "2026-08-07T14:32:00Z",
-        "from": "Muntplein / Nieuwe Doelenstraat",
-        "to": "Damrak",
-        "length": 219.4314340319,
-        "delay": 207,
-        "roadNumbers": [],
-        "timeValidity": "present",
-        "probabilityOfOccurrence": "certain",
-        "numberOfReports": null,
-        "lastReportTime": null,
-        "events": [
-          {
-            "code": 101,
-            "description": "Stationary traffic",
-            "iconCategory": 6
-          }
-        ],
-        "tmc": null
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            4.8924296687,
-            52.3698788984
-          ],
-          [
-            4.8924739251,
-            52.3699499828
-          ],
-          [
-            4.8925704846,
-            52.3701484964
-          ],
-          [
-            4.8926348577,
-            52.3703295068
-          ],
-          [
-            4.8927394638,
-            52.3707090788
-          ],
-          [
-            4.8927609215,
-            52.3707935698
-          ],
-          [
-            4.892793108,
-            52.3708954603
-          ],
-          [
-            4.8928293178,
-            52.3710402868
-          ],
-          [
-            4.8928346822,
-            52.3710644415
-          ],
-          [
-            4.8928601632,
-            52.3711851639
-          ],
-          [
-            4.8928775976,
-            52.3713179121
-          ],
-          [
-            4.8928869853,
-            52.371393037
-          ],
-          [
-            4.8928655276,
-            52.3717202482
-          ],
-          [
-            4.8928521166,
-            52.3718221878
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "TTI-67f0f707-54cd-41e1-8dc2-49de8cb7612d-TTR36261123524014001",
-        "iconCategory": 8,
-        "magnitudeOfDelay": 4,
-        "startTime": "2026-06-30T09:24:10Z",
+        "startTime": "2026-06-29T09:24:34Z",
         "endTime": null,
         "from": "Damstraat / Nes",
         "to": "Damrak / Rokin",
@@ -419,67 +128,7 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "TTI-67f0f707-54cd-41e1-8dc2-49de8cb7612d-TTR36261123524015001",
-        "iconCategory": 8,
-        "magnitudeOfDelay": 4,
-        "startTime": "2024-11-04T09:19:30Z",
-        "endTime": null,
-        "from": "Oudezijds Voorburgwal",
-        "to": "Damstraat",
-        "length": 108.3231194571,
-        "delay": null,
-        "roadNumbers": [],
-        "timeValidity": "present",
-        "probabilityOfOccurrence": "certain",
-        "numberOfReports": null,
-        "lastReportTime": null,
-        "events": [
-          {
-            "code": 401,
-            "description": "Closed",
-            "iconCategory": 8
-          }
-        ],
-        "tmc": null
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            4.8952433059,
-            52.371559304
-          ],
-          [
-            4.8951266298,
-            52.3715914929
-          ],
-          [
-            4.8949321697,
-            52.371635759
-          ],
-          [
-            4.8947538028,
-            52.3716759822
-          ],
-          [
-            4.8946263978,
-            52.3717027977
-          ],
-          [
-            4.8944346199,
-            52.3717403598
-          ],
-          [
-            4.8937345634,
-            52.3718744881
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "TTI-67f0f707-54cd-41e1-8dc2-49de8cb7612d-TTR36261123452015001",
+        "id": "TTI-6a58c161-5b55-4c19-8e5e-f022ca12dcbd-TTR36261123452015001",
         "iconCategory": 8,
         "magnitudeOfDelay": 4,
         "startTime": "2024-11-04T09:19:30Z",
@@ -539,14 +188,14 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "TTI-67f0f707-54cd-41e1-8dc2-49de8cb7612d-TTR36261123520006001",
+        "id": "TTI-6a58c161-5b55-4c19-8e5e-f022ca12dcbd-TTR36261123524015001",
         "iconCategory": 8,
         "magnitudeOfDelay": 4,
-        "startTime": "2026-05-07T08:01:00Z",
-        "endTime": "2026-09-25T14:00:00Z",
-        "from": "Kloveniersburgwal / Raamgracht",
-        "to": "Kloveniersburgwal / Rusland",
-        "length": 36.8889137325,
+        "startTime": "2024-11-04T09:19:30Z",
+        "endTime": null,
+        "from": "Oudezijds Voorburgwal",
+        "to": "Damstraat",
+        "length": 108.3231194571,
         "delay": null,
         "roadNumbers": [],
         "timeValidity": "present",
@@ -555,8 +204,8 @@
         "lastReportTime": null,
         "events": [
           {
-            "code": 24,
-            "description": "Bridge closed",
+            "code": 401,
+            "description": "Closed",
             "iconCategory": 8
           }
         ],
@@ -566,28 +215,32 @@
         "type": "LineString",
         "coordinates": [
           [
-            4.8979724536,
-            52.3698520818
+            4.8952433059,
+            52.371559304
           ],
           [
-            4.8978316376,
-            52.3698708637
+            4.8951266298,
+            52.3715914929
           ],
           [
-            4.897708256,
-            52.369884272
+            4.8949321697,
+            52.371635759
           ],
           [
-            4.8976277897,
-            52.3698936885
+            4.8947538028,
+            52.3716759822
           ],
           [
-            4.8975500057,
-            52.3699043844
+            4.8946263978,
+            52.3717027977
           ],
           [
-            4.8974427173,
-            52.3699244968
+            4.8944346199,
+            52.3717403598
+          ],
+          [
+            4.8937345634,
+            52.3718744881
           ]
         ]
       }
@@ -595,10 +248,10 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "TTI-67f0f707-54cd-41e1-8dc2-49de8cb7612d-TTR36261123448006001",
+        "id": "TTI-6a58c161-5b55-4c19-8e5e-f022ca12dcbd-TTR36261123448006001",
         "iconCategory": 8,
         "magnitudeOfDelay": 4,
-        "startTime": "2026-05-07T18:50:30Z",
+        "startTime": "2026-05-07T18:48:30Z",
         "endTime": "2026-09-25T14:00:00Z",
         "from": "Kloveniersburgwal / Rusland",
         "to": "Kloveniersburgwal / Raamgracht",
@@ -644,6 +297,62 @@
           [
             4.8979724536,
             52.3698520818
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "TTI-6a58c161-5b55-4c19-8e5e-f022ca12dcbd-TTR36261123520006001",
+        "iconCategory": 8,
+        "magnitudeOfDelay": 4,
+        "startTime": "2026-05-07T08:01:30Z",
+        "endTime": "2026-09-25T14:00:00Z",
+        "from": "Kloveniersburgwal / Raamgracht",
+        "to": "Kloveniersburgwal / Rusland",
+        "length": 36.8889137325,
+        "delay": null,
+        "roadNumbers": [],
+        "timeValidity": "present",
+        "probabilityOfOccurrence": "certain",
+        "numberOfReports": null,
+        "lastReportTime": null,
+        "events": [
+          {
+            "code": 24,
+            "description": "Bridge closed",
+            "iconCategory": 8
+          }
+        ],
+        "tmc": null
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            4.8979724536,
+            52.3698520818
+          ],
+          [
+            4.8978316376,
+            52.3698708637
+          ],
+          [
+            4.897708256,
+            52.369884272
+          ],
+          [
+            4.8976277897,
+            52.3698936885
+          ],
+          [
+            4.8975500057,
+            52.3699043844
+          ],
+          [
+            4.8974427173,
+            52.3699244968
           ]
         ]
       }
