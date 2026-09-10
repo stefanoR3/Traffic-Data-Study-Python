@@ -219,3 +219,6 @@ __marimo__/
 
 #to_delete file used to study alembic
 to_delete.py
+
+#pd_tutorial
+pd_tutorial.py

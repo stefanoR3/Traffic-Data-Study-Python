@@ -9,14 +9,16 @@ engine = create_engine("sqlite+pysqlite:///data.db") #echo = True
 metadata_obj = MetaData()
 
 #tables declaration
-
+#database metadata = tables and columns
+#metadata = kind of python dict binding table objects (py) to their string name
 
 incidents_table = Table(
     "incident_header",
     metadata_obj, #assings itself to the metadata collection
     Column("id", String, primary_key=True), #represent a column in a db table, and ssings itself to the table object 
 )
-        
+
+#to migrate with magnitude, events and coordinates
 incidents_info = Table(
     "incident_info",
     metadata_obj,
@@ -30,8 +32,18 @@ incidents_info = Table(
     Column("too",String(20)),
     Column("length", String(10)),
     Column("delay", String),
-    Column("number_of_reports", Integer),   
+    Column("number_of_reports", Integer),
     )
+
+incident_events = Table(
+    "incident_event",
+    metadata_obj,
+    Column("id",Integer, primary_key=True, autoincrement=True),
+    Column("incident_id", ForeignKey("incident_header.id"), nullable=False),
+    Column("code", Integer),
+    Column("description", String(15)),
+    Column("icon_category", Integer)
+)
 
 
 #created all tables present in the actual metadata namespace
@@ -49,29 +61,36 @@ def get_ids():
         id_set: set[str] = {0,1}
         for row in conn.execute(stmt):
             id_set.add(row[0])
-        print (id_set)
+        return id_set
 
 #from json to sqlite db
 def data_transfer():
     with engine.connect() as conn:
         id_set = get_ids()
         with open('json_file.json', 'r') as f:
-            reports = json.load(f)
+            json_file = json.load(f)
             try:
-                for json_report in reports['incidents']:
+                for json_report in json_file['incidents']:
+                    properties = json_report['properties']
                     report_id = properties['id']
 
                     #ceck if the id already had been inserted 
                     if(report_id not in id_set):
-                        stmt_table = insert(incidents_table).values(id=report_id)
-                        conn.execute(stmt_table)
+                        stmt = insert(incidents_table).values(id=report_id)
+                        conn.execute(stmt)
 
                     #same id's can have different information (future updates)
-                    properties = json_report['properties']
-                    stmt_info = insert(incidents_info).values(incident_id=report_id, icon_category=properties['iconCategory'],
+                    stmt = insert(incidents_info).values(incident_id=report_id, icon_category=properties['iconCategory'],
                         start_time = properties['startTime'], end_time = properties['endTime'], frm = properties['from'], too = properties['to'],
                         length = properties['length'], delay = properties['delay'], number_of_reports = properties['numberOfReports'])
-                    conn.execute(stmt_info)
+                    conn.execute(stmt)
+
+                    for event in properties['events']:
+                        stmt = insert(incident_events).values(incident_id=report_id, code=event['code'], description=event['description'], icon_category = 
+                            event['iconCategory'])
+                        conn.execute(stmt)
+
+                    #further to study transactions to deeply understeand commit
                     conn.commit()
 
             except Exception as ex:
@@ -94,6 +113,12 @@ def data_fetch():
 def ret_times():
     with engine.connect() as conn:
         stmt = select(incidents_info.c.incident_id)
+        for row in conn.execute(stmt):
+            print(row)
+
+def print_events():
+    with engine.connect() as conn:
+        stmt = select(incident_events)
         for row in conn.execute(stmt):
             print(row)
 

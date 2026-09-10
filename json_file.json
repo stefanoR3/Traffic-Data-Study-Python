@@ -3,14 +3,14 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "TTI-6a58c161-5b55-4c19-8e5e-f022ca12dcbd-TTR36261123416022002",
+        "id": "TTI-f496b97b-4892-434c-a18b-ec947b634995-TTR36261123416022001",
         "iconCategory": 8,
         "magnitudeOfDelay": 4,
         "startTime": "2026-08-03T04:00:00Z",
         "endTime": "2027-01-10T19:00:00Z",
         "from": "Raadhuisstraat",
         "to": "Leliegracht",
-        "length": 168.6,
+        "length": 172.181,
         "delay": null,
         "roadNumbers": [],
         "timeValidity": "present",
@@ -35,8 +35,8 @@
         "type": "LineString",
         "coordinates": [
           [
-            4.8853204737,
-            52.3740202284
+            4.8853177915,
+            52.3739880413
           ],
           [
             4.8853312025,
@@ -80,7 +80,7 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "TTI-6a58c161-5b55-4c19-8e5e-f022ca12dcbd-TTR36261123524014001",
+        "id": "TTI-f496b97b-4892-434c-a18b-ec947b634995-TTR36261123524014001",
         "iconCategory": 8,
         "magnitudeOfDelay": 4,
         "startTime": "2026-06-29T09:24:34Z",
@@ -128,67 +128,7 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "TTI-6a58c161-5b55-4c19-8e5e-f022ca12dcbd-TTR36261123452015001",
-        "iconCategory": 8,
-        "magnitudeOfDelay": 4,
-        "startTime": "2024-11-04T09:19:30Z",
-        "endTime": null,
-        "from": "Damstraat",
-        "to": "Oudezijds Voorburgwal",
-        "length": 108.3231194571,
-        "delay": null,
-        "roadNumbers": [],
-        "timeValidity": "present",
-        "probabilityOfOccurrence": "certain",
-        "numberOfReports": 2,
-        "lastReportTime": "2025-03-18T23:08:00Z",
-        "events": [
-          {
-            "code": 401,
-            "description": "Closed",
-            "iconCategory": 8
-          }
-        ],
-        "tmc": null
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            4.8937345634,
-            52.3718744881
-          ],
-          [
-            4.8944346199,
-            52.3717403598
-          ],
-          [
-            4.8946263978,
-            52.3717027977
-          ],
-          [
-            4.8947538028,
-            52.3716759822
-          ],
-          [
-            4.8949321697,
-            52.371635759
-          ],
-          [
-            4.8951266298,
-            52.3715914929
-          ],
-          [
-            4.8952433059,
-            52.371559304
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "TTI-6a58c161-5b55-4c19-8e5e-f022ca12dcbd-TTR36261123524015001",
+        "id": "TTI-f496b97b-4892-434c-a18b-ec947b634995-TTR36261123524015001",
         "iconCategory": 8,
         "magnitudeOfDelay": 4,
         "startTime": "2024-11-04T09:19:30Z",
@@ -248,24 +188,24 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "TTI-6a58c161-5b55-4c19-8e5e-f022ca12dcbd-TTR36261123448006001",
+        "id": "TTI-f496b97b-4892-434c-a18b-ec947b634995-TTR36261123452015001",
         "iconCategory": 8,
         "magnitudeOfDelay": 4,
-        "startTime": "2026-05-07T18:48:30Z",
-        "endTime": "2026-09-25T14:00:00Z",
-        "from": "Kloveniersburgwal / Rusland",
-        "to": "Kloveniersburgwal / Raamgracht",
-        "length": 36.8889137325,
+        "startTime": "2024-11-04T09:19:30Z",
+        "endTime": null,
+        "from": "Damstraat",
+        "to": "Oudezijds Voorburgwal",
+        "length": 108.3231194571,
         "delay": null,
         "roadNumbers": [],
         "timeValidity": "present",
         "probabilityOfOccurrence": "certain",
-        "numberOfReports": null,
-        "lastReportTime": null,
+        "numberOfReports": 2,
+        "lastReportTime": "2025-03-18T23:08:00Z",
         "events": [
           {
-            "code": 24,
-            "description": "Bridge closed",
+            "code": 401,
+            "description": "Closed",
             "iconCategory": 8
           }
         ],
@@ -275,84 +215,32 @@
         "type": "LineString",
         "coordinates": [
           [
-            4.8974427173,
-            52.3699244968
+            4.8937345634,
+            52.3718744881
           ],
           [
-            4.8975500057,
-            52.3699043844
+            4.8944346199,
+            52.3717403598
           ],
           [
-            4.8976277897,
-            52.3698936885
+            4.8946263978,
+            52.3717027977
           ],
           [
-            4.897708256,
-            52.369884272
+            4.8947538028,
+            52.3716759822
           ],
           [
-            4.8978316376,
-            52.3698708637
+            4.8949321697,
+            52.371635759
           ],
           [
-            4.8979724536,
-            52.3698520818
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "TTI-6a58c161-5b55-4c19-8e5e-f022ca12dcbd-TTR36261123520006001",
-        "iconCategory": 8,
-        "magnitudeOfDelay": 4,
-        "startTime": "2026-05-07T08:01:30Z",
-        "endTime": "2026-09-25T14:00:00Z",
-        "from": "Kloveniersburgwal / Raamgracht",
-        "to": "Kloveniersburgwal / Rusland",
-        "length": 36.8889137325,
-        "delay": null,
-        "roadNumbers": [],
-        "timeValidity": "present",
-        "probabilityOfOccurrence": "certain",
-        "numberOfReports": null,
-        "lastReportTime": null,
-        "events": [
-          {
-            "code": 24,
-            "description": "Bridge closed",
-            "iconCategory": 8
-          }
-        ],
-        "tmc": null
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            4.8979724536,
-            52.3698520818
+            4.8951266298,
+            52.3715914929
           ],
           [
-            4.8978316376,
-            52.3698708637
-          ],
-          [
-            4.897708256,
-            52.369884272
-          ],
-          [
-            4.8976277897,
-            52.3698936885
-          ],
-          [
-            4.8975500057,
-            52.3699043844
-          ],
-          [
-            4.8974427173,
-            52.3699244968
+            4.8952433059,
+            52.371559304
           ]
         ]
       }
