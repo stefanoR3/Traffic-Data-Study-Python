@@ -1,8 +1,14 @@
 #env.py: python script that is run everytime the alembic migrations are invoked (imported)
 #it does import various itmes for sqlalchemy
 
+#important note: even if alembic feels like a framework with all those inputs, the control is still on us
+#therefore, it can't be called a framework, but rather a tool
+
 #it will use the sqlalchemy engine provided by the user in order to connect to the db
 
+#we tell alembic to use the metadata rules for next migrations
+from db import metadata_obj
+target_metadata = metadata_obj
 
 from logging.config import fileConfig
 import db

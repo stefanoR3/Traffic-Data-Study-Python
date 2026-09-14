@@ -9,7 +9,7 @@ def initialize_dataFrame():
     engine = db.engine
     with engine.connect() as conn:
         try:
-            #ids:list[str] = []
+            ids:list[str] = []
             info_date:list[datetime] = []
             icon_category:list[int] = []
             start_time:list[str] = []
@@ -26,7 +26,7 @@ def initialize_dataFrame():
                 id = row[0]
                 stmt = sa.select(db.incidents_info).where(db.incidents_info.c.incident_id == id)
                 for incident_row in conn.execute(stmt):
-                    #ids.append(id)
+                    ids.append(id)
                     info_date.append(incident_row[2])
                     icon_category.append(incident_row[3])
                     start_time.append(incident_row[4])
@@ -38,7 +38,7 @@ def initialize_dataFrame():
                     number_of_reports.append(incident_row[10])
 
             df_dictionary = {
-                #'id': ids,
+                'id': ids,
                 'info_dates': info_date,
                 'icon_category': icon_category,
                 'start_time': start_time,
@@ -62,6 +62,7 @@ def clean_dataFrame(df:pd.DataFrame):
     df.fillna({'last_report_time':'no value'}, inplace=True)
 
     #convert into pandas datetime (see documentation)
+    #coerce if datatype is not what expected -> NaT
     df['start_time'] = pd.to_datetime(df['start_time'], errors = 'coerce',  format = 'ISO8601')
     df['end_time'] = pd.to_datetime(df['end_time'],errors = 'coerce', format = 'ISO8601')
 

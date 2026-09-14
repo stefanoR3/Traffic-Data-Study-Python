@@ -1,6 +1,7 @@
 import requests
 import json
 import db
+import fetch_tomtom_report as tomtom
 import pd_module as pd_mod
 
 #tom tom gives json, any language can parse it (java, python etc!)
@@ -73,55 +74,24 @@ class incident:
         print(f"time validity: {self.time_validity}, probability of occurance: {self.probability_of_occurance}, number of reports: {self.number_of_reports}")
         print(f"last report time: {self.last_report_time}\n")
 
-def get_reports():
-    #POST request with ID's
-    scheme = 'http'
-    domain = 'api.tomtom.com'
-    path = '/traffic/services/5/incidentDetails'
-    key = 'key=ptHPCU6tTJyLLvW6nhVa8aChAyVz5KsL'
-    bbox = '&bbox=4.8854592519716675,52.36934334773164,4.897883244144765,52.37496348620152'
-    fields = '&fields={incidents{type,geometry{type,coordinates},properties{id,iconCategory,magnitudeOfDelay,events{description,code,iconCategory},' \
-    'startTime,endTime,from,to,length,delay,roadNumbers,timeValidity,probabilityOfOccurrence,numberOfReports,lastReportTime,tmc{countryCode,tableNumber,' \
-    'tableVersion,direction,points{location,offset}}}}}'
-    language = '&language=en-GB&t=1111'
-    filter = '&timeValidityFilter=present'
-    req_url = scheme + '://' + domain + path + '?' + key + bbox + fields + language + filter
-    print(req_url)
-    response = requests.get(req_url)
-    json_response = response.json()
-    response.raise_for_status()
 
-    #to resolve duplicates problem with json_name
+#json->db->pd
 
-    with open('json_file.json', 'w') as f:
-        json.dump(json_response,f, indent=2)
-
-#get_reports()
-with open('json_file.json', 'r') as f:
-    reports = json.load(f)
-
-#get_reports()
-#db.data_transfer()
+#tomtom.get_reports()
 #db.data_fetch()
 
-#next: pandas
-
-#retrieve properties from json into lists -> into dictionary, for dataFrame init
-
 #recap ds, read pandas package overview
-
 #pandas to retain only math?
 
-df = pd_mod.initialize_dataFrame()
-pd_mod.clean_dataFrame(df)
+#df = pd_mod.initialize_dataFrame()
+#pd_mod.clean_dataFrame(df)
 #print(df['end_time'])
 #print(df['id'].duplicated())
-print(df.tail())
+#print(df)
 
 #db.print_events()
-
 #print(db.metadata_obj.tables.keys())
 
-
+#db.ceck_duplicates()
 
 

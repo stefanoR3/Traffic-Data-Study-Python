@@ -22,6 +22,10 @@ depends_on: Union[str, Sequence[str], None] = None
 #alembic made this easier to make all those steps with the batch_alter_table function,
 #while also keeping track of the migration like github
 
+#we used sa.Column to a blueprint that alembic actually transaltes using SQLAlchemy
+#don't forget that alembic is actually built on top of SQLAlchemy
+#sa.Column is generic for all database types: alembic use url to find wich sql
+
 def upgrade() -> None:
     with op.batch_alter_table("incident_info") as batch_op:
         batch_op.add_column(sa.Column("info_date", sa.DateTime, default=datetime.now()))
