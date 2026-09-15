@@ -83,15 +83,14 @@ class incident:
 #recap ds, read pandas package overview
 #pandas to retain only math?
 
-#df = pd_mod.initialize_dataFrame()
-#pd_mod.clean_dataFrame(df)
+#db.data_transfer('json_file2404')
+df = pd_mod.initialize_dataFrame()
+pd_mod.clean_dataFrame(df)
 #print(df['end_time'])
 #print(df['id'].duplicated())
-#print(df)
+print(df)
 
 #db.print_events()
 #print(db.metadata_obj.tables.keys())
-
-#db.ceck_duplicates()
 
 

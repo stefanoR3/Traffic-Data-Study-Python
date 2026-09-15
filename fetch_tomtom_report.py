@@ -6,7 +6,7 @@ import os
 #tomtom refresh rate is roughly 1 minute
 #some reports will be the same (long lasting) with other suffix
 
-def get_reports():
+def get_reports() -> None:
     #POST request with ID's
     scheme = 'http'
     domain = 'api.tomtom.com'
@@ -35,7 +35,4 @@ def get_reports():
     db.data_transfer(json_string)
 
     #automatically removes the json file after data transfer
-    #os.remove('json_string')
-
-    #next: solve duplicates
-    #delete and update sqlalchemy
+    os.remove(json_string)
