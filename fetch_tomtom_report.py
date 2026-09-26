@@ -6,13 +6,19 @@ import os
 #tomtom refresh rate is roughly 1 minute
 #some reports will be the same (long lasting) with other suffix
 
+#nord = ploiesti
+#sud = Giurgiu
+#vest = Targoviste
+#est = Urziceni
+
 def get_reports() -> None:
     #POST request with ID's
     scheme = 'http'
     domain = 'api.tomtom.com'
     path = '/traffic/services/5/incidentDetails'
     key = 'key=ptHPCU6tTJyLLvW6nhVa8aChAyVz5KsL'
-    bbox = '&bbox=25.9220,44.3315,26.2425,44.5510'
+    #bbox = '&bbox=25.4844,44.0144,26.6801,44.8681'
+    bbox = '&bbox=25.7500,44.2000,26.4000,44.7000'
     fields = '&fields={incidents{type,geometry{type,coordinates},properties{id,iconCategory,magnitudeOfDelay,events{description,code,iconCategory},' \
     'startTime,endTime,from,to,length,delay,roadNumbers,timeValidity,probabilityOfOccurrence,numberOfReports,lastReportTime,tmc{countryCode,tableNumber,' \
     'tableVersion,direction,points{location,offset}}}}}'

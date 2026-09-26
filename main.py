@@ -77,20 +77,29 @@ class incident:
 
 #json->db->pd
 
-#tomtom.get_reports()
+tomtom.get_reports()
 #db.data_fetch()
 
 #recap ds, read pandas package overview
 #pandas to retain only math?
 
 #db.data_transfer('json_file2404')
-df = pd_mod.initialize_dataFrame()
-pd_mod.clean_dataFrame(df)
+#df = pd_mod.initialize_generic_dataFrame()
+#pd_mod.clean_dataFrame(df)
 #print(df['end_time'])
 #print(df['id'].duplicated())
-print(df)
+#print(df.head())
 
 #db.print_events()
 #print(db.metadata_obj.tables.keys())
 
+df = pd_mod.initialize_time_based_dataFrame()
 
+#pd_mod.initialize_time_based_dataFrame()
+
+#problem: we have only one valid id!!!!
+#seet = db.get_main_ids()
+#print(seet)
+
+#print(db.get_main_ids())
+#print(len(db.get_snap_ids()))
