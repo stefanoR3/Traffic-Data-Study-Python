@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, text, Table, Column, Integer, String, MetaData, ForeignKey, insert, select, DateTime, delete
+from sqlalchemy import create_engine, text, Table, Column, Integer, Float, String, MetaData, ForeignKey, insert, select, DateTime, delete
 from typing import List, Optional
 import json
 import datetime
@@ -7,77 +7,67 @@ import sys
 #engine for connection and exectuion, metadata for tables namespace
 #it does create a new sqlite database in the current directory
 engine = create_engine("sqlite+pysqlite:///data.db") #echo = True
-
-#convention used to
-convention = {
-    "ix": "ix_%(column_0_label)s", #for indexes
-    "uq": "uq_%(table_name)s_%(column_0_name)s", #for unique constraints
-    "ck": "ck_%(table_name)s_%(constraint_name)s", #for ceck constraints
-    "fk": "fk_%(table_name)s_%(column_0_name)s", #for foreign keys
-    "pk": "pk_%(table_name)s" #for primary keys
-}
-
-#we inject this rule inside the metadata_obj
-metadata_obj = MetaData(naming_convention=convention)
+metadata_obj = MetaData()
 
 #tables declaration
 #database metadata = tables and columns
 #metadata = kind of python dict binding table objects (py) to their string name
-
 #unique used as safety net
 
 #main id = prefix
 incidents_table = Table(
     "incident_header",
     metadata_obj, #assings itself to the metadata collection
-    Column("main_id", String, primary_key=True, unique = True), #represent a column in a db table, and assings itself to the table object 
+    Column("main_id", String, primary_key=True, nullable=False) #represent a column in a db table, and assings itself to the table object 
 )
 
 #snapshot_id = suffix
-incidents_info = Table(
-    "incident_info",
+snapshots_table = Table(
+    "incident_snapshot",
     metadata_obj,
-    Column("snapshot_id", String, primary_key=True, unique = True),
+    Column("snapshot_id", String, primary_key=True, nullable=False),
     Column("main_id", ForeignKey("incident_header.main_id"), nullable=False),
     Column("icon_category", Integer),
     Column("magnitude_of_delay", Integer), #alembic
-    Column("start_time", String(21)),
-    Column("end_time", String(21)),
-    Column("frm",String(20)),
-    Column("too",String(20)),
-    Column("length", String(10)),
-    Column("delay", String),
+    Column("start_time", String(20)),
+    Column("end_time", String(20)),
+    Column("frm",String(100)),
+    Column("too",String(100)),
+    Column("length", Float),
+    Column("delay", Integer),
     Column("number_of_reports", Integer),
-    Column("last_report_time", String(21))
+    Column("last_report_time", String(20))
     )
 
-incident_events = Table(
+snapshot_events = Table(
     "incident_event",
     metadata_obj,
     Column("event_id",Integer, primary_key=True, autoincrement=True),
-    Column("snapshot_id", ForeignKey("incident_header.main_id"), nullable=False),
+    Column("snapshot_id", ForeignKey("incident_snapshot.snapshot_id"), nullable=False),
     Column("code", Integer),
-    Column("description", String(15)),
-    Column("icon_category", Integer)
+    Column("description", String(100))
+)
+
+#to manage multiple coordinates
+snapshot_coordinates = Table(
+    "incident_coordinates",
+    metadata_obj,
+    Column("id",Integer, primary_key=True, autoincrement=True),
+    Column("snapshot_id", ForeignKey("incident_snapshot.snapshot_id"), nullable=False),
+    Column("north", Float),
+    Column("south", Float),
+    Column("east", Float),
+    Column("west", Float),
+    Column("center_latitude", Float),
+    Column("center_longitude", Float)
 )
 
 #created all tables present in the actual metadata namespace
 #if tables exists, it will pass
 #it can be used once, if tables are modifed, we have to use alembic
-#deleting the db.py means losing all the data!
-metadata_obj.create_all(engine)
-
+#deleting the data.db means losing all the data!
 #dict and set are hash tables
-
-def clean_records() -> None:
-    with engine.connect() as conn:
-        stmt = delete(incidents_table)
-        conn.execute(stmt)
-        stmt = delete(incidents_info)
-        conn.execute(stmt)
-        stmt = delete(incident_events)
-        conn.execute(stmt)
-        conn.commit()
+metadata_obj.create_all(engine)
 
 #row is a sinle element tuple!
 def get_main_ids() -> set:
@@ -92,7 +82,7 @@ def get_main_ids() -> set:
 
 def get_snap_ids() -> set:
     with engine.connect() as conn:
-        stmt = select(incidents_info.c.snapshot_id)
+        stmt = select(snapshots_table.c.snapshot_id)
         id_set: set[str] = set()
         for row in conn.execute(stmt):
             id_set.add(row[0])
@@ -115,7 +105,7 @@ def data_transfer(json_string) -> None:
                     properties = json_report['properties']
                     report_id = properties['id']
                     coordinates = json_report['geometry']['coordinates']
-                    lon, lat = 0, 0 #lon,lat = 0 would raise an error!
+                    lon, lat = 0,0 #lon,lat = 0 would raise an error!
                     try:
                         if isinstance(coordinates[0], list):
                             lon = coordinates[0][0]
@@ -141,11 +131,14 @@ def data_transfer(json_string) -> None:
                         print(f"error at main id: {ex.args}")
                         return
 
+                    #fromisoformat to convert from ISO 8601 (international) to py datetime
+
                     try:
                         if (snap_id) not in snap_ids:   #O(1)
-                            stmt = insert(incidents_info).values(main_id=m_id, snapshot_id=(snap_id), icon_category=properties['iconCategory'],
-                                start_time = properties['startTime'], end_time = properties['endTime'], frm = properties['from'], too = properties['to'],
-                                length = properties['length'], delay = properties['delay'], number_of_reports = properties['numberOfReports'], last_report_time=properties['lastReportTime'])
+                            stmt = insert(snapshots_table).values(snapshot_id=snap_id, main_id=m_id, icon_category=properties['iconCategory'],
+                                start_time=properties['startTime'], end_time=properties['endTime'], frm=properties['from'], too=properties['to'],
+                                length=properties['length'], delay=properties['delay'], number_of_reports=properties['numberOfReports'],
+                                last_report_time=properties['lastReportTime'])
                             conn.execute(stmt)
                     except Exception as ex:
                         print(f"error at snap id: {ex.args}")
@@ -153,12 +146,36 @@ def data_transfer(json_string) -> None:
 
                     try:
                         for event in properties['events']:
-                            stmt = insert(incident_events).values(snapshot_id=str(snap_id), code=event['code'], description=event['description'], icon_category=event['iconCategory'])
+                            stmt = insert(snapshot_events).values(snapshot_id=str(snap_id), code=event['code'], description=event['description'])
                             conn.execute(stmt)
                     except Exception as ex:
                         print(f"error at events: {ex.args}")
                         return
 
+                    try:
+                        latitudes: list[float] = []
+                        longitudes: list[float] = []
+                        if isinstance(coordinates[0], list):
+                            for coords in coordinates:
+                                latitudes.append(coords[0])
+                                longitudes.append(coords[1])
+                        else:
+                            latitudes.append(coordinates[0])
+                            longitudes.append(coordinates[1])
+                        n = max(latitudes)
+                        s = min(latitudes)
+                        e = max(longitudes)
+                        w = max(longitudes)
+                        #formula works even for one point geometry
+                        center_lat = (n+s)/2
+                        center_lon = (e+w)/2
+                        stmt = insert(snapshot_coordinates).values(snapshot_id=snap_id, north=n, south=s, east=e, west=w,
+                        center_latitude=center_lat,center_longitude=center_lon)
+                        conn.execute(stmt)
+                    except Exception as ex:
+                        print(f"error at coordinates: {ex.args}")
+                        return
+                            
                 #further to study transactions to deeply understeand commit
                 #only one commit ensures that no data gets introduced if an error occure
                 conn.commit()
@@ -167,13 +184,6 @@ def data_transfer(json_string) -> None:
                 print("error trying to insert report")
                 print(ex.args)
                 return
-
-#print data
-def print_events() -> None:
-    with engine.connect() as conn:
-        stmt = select(incident_events)
-        for row in conn.execute(stmt):
-            print(row)
 
                  
 

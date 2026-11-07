@@ -3,22 +3,7 @@ import json
 from datetime import datetime
 import db
 import sqlalchemy as sa
-
-def clean_dataFrame(df:pd.DataFrame) -> None:
-    df.fillna({'delay':0.0}, inplace=True)
-    df.fillna({'number_of_reports':0.0}, inplace=True)
-    df.fillna({'last_report_time':'no value'}, inplace=True)
-
-    #convert into pandas datetime (see documentation)
-    #format tells pd to not search for the format, we give it
-    #coerce if datatype is not what expected -> NaT
-    #NaN is the standard marker used in pandas (Non a Number)
-    df['start_time'] = pd.to_datetime(df['start_time'], errors = 'coerce',  format = 'ISO8601')
-    df['end_time'] = pd.to_datetime(df['end_time'],errors = 'coerce', format = 'ISO8601')
-    df['last_report_time'] = pd.to_datetime(df['last_report_time'], errors = 'coerce', format='ISO8601')
-
-    df.fillna({'end_time':'None'}, inplace=True)
-    #df.dropna(inplace=True) #safety measure, removes no end_date
+#from main import coordinate
 
 #retrieve properties from json into lists -> into dictionary, for dataFrame init
 def initialize_generic_dataFrame() -> pd.DataFrame:
@@ -37,8 +22,10 @@ def initialize_generic_dataFrame() -> pd.DataFrame:
             delay:list[float] = []
             number_of_reports:list[int] = []
             last_report_time:list[str] = []
+            latitude:list[float] = []
+            longitude:list[float] = []
 
-            stmt = sa.select(db.incidents_info)
+            stmt = sa.select(db.snapshots_table)
             for incident_row in conn.execute(stmt):
                 snapshot_id.append(incident_row[0])
                 main_id.append(incident_row[1])
@@ -53,6 +40,13 @@ def initialize_generic_dataFrame() -> pd.DataFrame:
                 number_of_reports.append(incident_row[10])
                 last_report_time.append(incident_row[11])
 
+
+            #automatically set on clouse by foreignkey constraint
+            stmt = sa.select(db.snapshot_coordinates).join(db.snapshots_table)
+            for coordinates_row in conn.execute(stmt):
+                latitude.append(coordinates_row[6])
+                longitude.append(coordinates_row[7])
+
             df_dictionary = {
                 'main_id': main_id,
                 'snapshot_id': snapshot_id,
@@ -65,7 +59,9 @@ def initialize_generic_dataFrame() -> pd.DataFrame:
                 'length': length,
                 'delay': delay,
                 'number_of_reports': number_of_reports,
-                'last_report_time': last_report_time
+                'last_report_time': last_report_time,
+                'latitude': latitude,
+                'longitude': longitude
             }
 
             return pd.DataFrame(df_dictionary)
@@ -73,6 +69,22 @@ def initialize_generic_dataFrame() -> pd.DataFrame:
             print('Error trying to parse data into dataFrame: ', ex)
         finally:
             conn.close()
+
+def clean_dataFrame(df:pd.DataFrame) -> None:
+    df.fillna({'delay':0.0}, inplace=True)
+    df.fillna({'number_of_reports':0.0}, inplace=True)
+    df.fillna({'last_report_time':'no value'}, inplace=True)
+
+    #convert into pandas datetime (see documentation)
+    #format tells pd to not search for the format, we give it
+    #coerce if datatype is not what expected -> NaT
+    #NaN is the standard marker used in pandas (Non a Number)
+    df['start_time'] = pd.to_datetime(df['start_time'], errors = 'coerce',  format = 'ISO8601')
+    df['end_time'] = pd.to_datetime(df['end_time'],errors = 'coerce', format = 'ISO8601')
+    df['last_report_time'] = pd.to_datetime(df['last_report_time'], errors = 'coerce', format='ISO8601')
+
+    df.fillna({'end_time':'None'}, inplace=True)
+    #df.dropna(inplace=True) #safety measure, removes no end_date
 
 #incident->duration_main_cause
 
@@ -84,7 +96,7 @@ def initialize_generic_dataFrame() -> pd.DataFrame:
 
 #The groups attribute of a GroupBy object is a dictionary that maps each unique group key to the index labels belonging to that group.
 
-def initialize_time_based_dataFrame(category:int = 0) -> pd.DataFrame:
+def initialize_time_based_dataFrame() -> pd.DataFrame:
     main_ids:set = db.get_main_ids()
 
     #name and group loop simultaniously!
@@ -111,13 +123,42 @@ def initialize_time_based_dataFrame(category:int = 0) -> pd.DataFrame:
     grouped_df['start_time'] = pd.to_datetime(grouped_df['start_time'], errors = 'coerce',  format = 'ISO8601')
     grouped_df['end_time'] = pd.to_datetime(grouped_df['end_time'],errors = 'coerce', format = 'ISO8601')
     grouped_df.dropna(how='any', inplace=True)
-
     grouped_df['duration'] = grouped_df['end_time'] - grouped_df['start_time']
-    print(grouped_df.to_string())
-        
-    #for group in grouped_df:
-        #print(name)
-        #print(group)
+    return grouped_df
+
+def initialize_category_count_dataFrame() -> pd.DataFrame:
+    main_df = initialize_generic_dataFrame()
+    number_of_reports = main_df['main_id'].count()
+    category_count_df = pd.DataFrame(main_df['icon_category'].value_counts())
+    category_count_df['ratio'] = category_count_df['count']/number_of_reports #cat_count_df is a series, returns a series
+    categories = category_count_df.index
+    for category in categories:
+        group = main_df.groupby('icon_category').get_group(category)['delay']
+        print(group)
+        #continue to calculate mean
+    
+    return category_count_df
+
+def groupby_coordinates(df:pd.DataFrame, lat:float, lon:float, offset:float = 0.001):
+    #offset of 0.001 ~ 100 meters
+    df = initialize_generic_dataFrame()
+    min_lon = lon - offset;
+    max_lon = lon + offset;
+    min_lat = lat - offset;
+    max_lat = lat + offset;
+    #mask returns true or false based on the row 
+    mask = (df['latitude'].between(min_lat, max_lat) & df['longitude'].between(min_lon, max_lon))
+    grouped = df[mask].groupby(['latitude', 'longitude'])
+    for name, group in grouped:
+        print(name)
+        print(group)
+
+#def incident_probability_index(place:coordinate):
+    
+#def initialize_impac_radius_dataFrame() -> pd.dataFrame:
+
+
+
          
 
 
