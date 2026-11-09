@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 import db
 import sqlalchemy as sa
+from sqlalchemy.exc import SQLAlchemyError
 #from main import coordinate
 
 #retrieve properties from json into lists -> into dictionary, for dataFrame init
@@ -139,19 +140,44 @@ def initialize_category_count_dataFrame() -> pd.DataFrame:
     
     return category_count_df
 
-def groupby_coordinates(df:pd.DataFrame, lat:float, lon:float, offset:float = 0.001):
+def weekly_bin(date_value:datetime.date):
+    #function that assigns weekly_bin series to df
+    day:str = date_value.strftime("%A")
+    hour = date_value.hour
+    return f"{str(day)}_{str(hour)}"
+
+def groupby_timezone(lat:float, lon:float, offset:float = 0.001) -> pd.DataFrame:
     #offset of 0.001 ~ 100 meters
-    df = initialize_generic_dataFrame()
     min_lon = lon - offset;
     max_lon = lon + offset;
     min_lat = lat - offset;
     max_lat = lat + offset;
-    #mask returns true or false based on the row 
-    mask = (df['latitude'].between(min_lat, max_lat) & df['longitude'].between(min_lon, max_lon))
-    grouped = df[mask].groupby(['latitude', 'longitude'])
-    for name, group in grouped:
-        print(name)
-        print(group)
+    try:
+        with db.engine.connect() as conn:
+            stmt = sa.select(db.snapshots_table).join(db.snapshot_coordinates).where(
+                db.snapshot_coordinates.c.center_latitude >= min_lat,
+                db.snapshot_coordinates.c.center_latitude <= max_lat,
+                db.snapshot_coordinates.c.center_longitude >= min_lon,
+                db.snapshot_coordinates.c.center_longitude <= max_lon
+            )
+            result = conn.execute(stmt) #result = cursor(iterator) pointing to the next row
+            #convert all rows into a dictionary inside a list
+            data = [row._asdict() for row in result] #list comprehension
+            df = pd.DataFrame(data)
+            clean_dataFrame(df)
+            #hour(0-23), dow(1-7), combined = 168 combinations
+            df['weekly_bin'] = df['start_time'].apply(weekly_bin)
+            return df
+    except SQLAlchemyError as sql_ex:
+        print(f"An error occured during database fetching, {sql_ex.args}")
+    except Exception as ex:
+        print(f"An error occured while converting data, {ex.args}")
+
+def groupby_weekly_bin(df: pd.DataFrame) -> pd.DataFrame:
+    df_grouped = df.groupby('weekly_bin')
+    number_of_incidents_zone = df_grouped.count()
+    number_of_incidents_time = df.grouped.count.where('''.....''')
+    #to implement search by time (weekly bin)
 
 #def incident_probability_index(place:coordinate):
     

@@ -2,8 +2,8 @@ import requests
 import json
 import db
 import os
+import time
 
-#tom tom gives json, any language can parse it (java, python etc!)
 #tomtom refresh rate is roughly 1 minute
 #some reports will be the same (long lasting) with other suffix
 

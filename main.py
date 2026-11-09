@@ -18,11 +18,12 @@ class coordinate:
 #pandas to retain only math?
 
 #db.data_transfer('json_file2404')
-df = pd_mod.initialize_generic_dataFrame()
-pd_mod.clean_dataFrame(df)
+#df = pd_mod.initialize_generic_dataFrame()
+#pd_mod.clean_dataFrame(df)
 #print(df['end_time'])
 #print(df['id'].duplicated())
-pd_mod.groupby_coordinates(df,26.25403914745,44.4531995306)
+df = pd_mod.groupby_timezone(26.25403914745,44.4531995306)
+pd_mod.groupby_weekly_bin(df)
 #print(df.head().to_string())
 
 #db.print_events()
