@@ -52,8 +52,8 @@ snapshot_events = Table(
 snapshot_coordinates = Table(
     "incident_coordinates",
     metadata_obj,
-    Column("id",Integer, primary_key=True, autoincrement=True),
-    Column("snapshot_id", ForeignKey("incident_snapshot.snapshot_id"), nullable=False),
+    Column("snapshot_id", ForeignKey("incident_snapshot.snapshot_id"), primary_key=True,
+         nullable=False),
     Column("north", Float),
     Column("south", Float),
     Column("east", Float),
@@ -138,7 +138,7 @@ def data_transfer(json_string) -> None:
                             stmt = insert(snapshots_table).values(snapshot_id=snap_id, main_id=m_id, icon_category=properties['iconCategory'],
                                 start_time=properties['startTime'], end_time=properties['endTime'], frm=properties['from'], too=properties['to'],
                                 length=properties['length'], delay=properties['delay'], number_of_reports=properties['numberOfReports'],
-                                last_report_time=properties['lastReportTime'])
+                                last_report_time=properties['lastReportTime']).prefix_with('OR IGNORE') #to pass duplicates
                             conn.execute(stmt)
                     except Exception as ex:
                         print(f"error at snap id: {ex.args}")
@@ -146,7 +146,8 @@ def data_transfer(json_string) -> None:
 
                     try:
                         for event in properties['events']:
-                            stmt = insert(snapshot_events).values(snapshot_id=str(snap_id), code=event['code'], description=event['description'])
+                            stmt = insert(snapshot_events).values(snapshot_id=str(snap_id), code=event['code'],
+                                description=event['description']).prefix_with('OR IGNORE')
                             conn.execute(stmt)
                     except Exception as ex:
                         print(f"error at events: {ex.args}")
@@ -170,7 +171,7 @@ def data_transfer(json_string) -> None:
                         center_lat = (n+s)/2
                         center_lon = (e+w)/2
                         stmt = insert(snapshot_coordinates).values(snapshot_id=snap_id, north=n, south=s, east=e, west=w,
-                        center_latitude=center_lat,center_longitude=center_lon)
+                        center_latitude=center_lat,center_longitude=center_lon).prefix_with('OR IGNORE')
                         conn.execute(stmt)
                     except Exception as ex:
                         print(f"error at coordinates: {ex.args}")

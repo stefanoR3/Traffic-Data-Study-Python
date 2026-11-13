@@ -4,72 +4,6 @@ from datetime import datetime
 import db
 import sqlalchemy as sa
 from sqlalchemy.exc import SQLAlchemyError
-#from main import coordinate
-
-#retrieve properties from json into lists -> into dictionary, for dataFrame init
-def initialize_generic_dataFrame() -> pd.DataFrame:
-    engine = db.engine
-    with engine.connect() as conn:
-        try:
-            main_id:list[str] = []
-            snapshot_id:list[str] = []
-            icon_category:list[int] = []
-            magnitude_of_delay:list[str] = []
-            start_time:list[str] = []
-            end_time:list[str] = []
-            frm:list[str] = []
-            to:list[str] = []
-            length:list[float] = []
-            delay:list[float] = []
-            number_of_reports:list[int] = []
-            last_report_time:list[str] = []
-            latitude:list[float] = []
-            longitude:list[float] = []
-
-            stmt = sa.select(db.snapshots_table)
-            for incident_row in conn.execute(stmt):
-                snapshot_id.append(incident_row[0])
-                main_id.append(incident_row[1])
-                icon_category.append(incident_row[2])
-                magnitude_of_delay.append(incident_row[3])
-                start_time.append(incident_row[4])
-                end_time.append(incident_row[5])
-                frm.append(incident_row[6])
-                to.append(incident_row[7])
-                length.append(incident_row[8])
-                delay.append(incident_row[9])
-                number_of_reports.append(incident_row[10])
-                last_report_time.append(incident_row[11])
-
-
-            #automatically set on clouse by foreignkey constraint
-            stmt = sa.select(db.snapshot_coordinates).join(db.snapshots_table)
-            for coordinates_row in conn.execute(stmt):
-                latitude.append(coordinates_row[6])
-                longitude.append(coordinates_row[7])
-
-            df_dictionary = {
-                'main_id': main_id,
-                'snapshot_id': snapshot_id,
-                'icon_category': icon_category,
-                'magnitude_of_delay': magnitude_of_delay,
-                'start_time': start_time,
-                'end_time': end_time,
-                'from': frm,
-                'to': to,
-                'length': length,
-                'delay': delay,
-                'number_of_reports': number_of_reports,
-                'last_report_time': last_report_time,
-                'latitude': latitude,
-                'longitude': longitude
-            }
-
-            return pd.DataFrame(df_dictionary)
-        except Exception as ex:
-            print('Error trying to parse data into dataFrame: ', ex)
-        finally:
-            conn.close()
 
 def clean_dataFrame(df:pd.DataFrame) -> None:
     df.fillna({'delay':0.0}, inplace=True)
@@ -87,14 +21,27 @@ def clean_dataFrame(df:pd.DataFrame) -> None:
     df.fillna({'end_time':'None'}, inplace=True)
     #df.dropna(inplace=True) #safety measure, removes no end_date
 
+#retrieve properties from json into lists -> into dictionary, for dataFrame init
+
+def initialize_generic_df():
+    with db.engine.connect() as conn:
+        stmt = sa.select(db.snapshots_table)
+        result = conn.execute(stmt)
+        #_asdict(): nametuple -> dict
+        data = [row._asdict() for row in result]
+        df = pd.DataFrame(data)
+        clean_dataFrame(df)
+        #safety worning for duplicates
+        if df.duplicated(subset=['snapshot_id']).sum()>0:
+            print('\n WARNING: a duplicate has been found in snapshots table! \n')
+        return df
+
 #incident->duration_main_cause
 
 #name = string or tuple
 #group = pd.dataFrame
-
 #after get_grouped the result is a df
 #if only group_by group(string/tuple) -> df
-
 #The groups attribute of a GroupBy object is a dictionary that maps each unique group key to the index labels belonging to that group.
 
 def initialize_time_based_dataFrame() -> pd.DataFrame:
@@ -112,7 +59,7 @@ def initialize_time_based_dataFrame() -> pd.DataFrame:
 
     #only the reports with a defined end time
 
-    main_df = initialize_generic_dataFrame()
+    main_df = initialize_generic_df()
     #clean_dataFrame(main_df)
     grouped_df = main_df.groupby('main_id').agg(
         start_time=('start_time', 'min'),
@@ -128,7 +75,7 @@ def initialize_time_based_dataFrame() -> pd.DataFrame:
     return grouped_df
 
 def initialize_category_count_dataFrame() -> pd.DataFrame:
-    main_df = initialize_generic_dataFrame()
+    main_df = initialize_generic_df()
     number_of_reports = main_df['main_id'].count()
     category_count_df = pd.DataFrame(main_df['icon_category'].value_counts())
     category_count_df['ratio'] = category_count_df['count']/number_of_reports #cat_count_df is a series, returns a series
@@ -163,21 +110,30 @@ def groupby_timezone(lat:float, lon:float, offset:float = 0.001) -> pd.DataFrame
             result = conn.execute(stmt) #result = cursor(iterator) pointing to the next row
             #convert all rows into a dictionary inside a list
             data = [row._asdict() for row in result] #list comprehension
+            print(data)
             df = pd.DataFrame(data)
             clean_dataFrame(df)
             #hour(0-23), dow(1-7), combined = 168 combinations
             df['weekly_bin'] = df['start_time'].apply(weekly_bin)
-            return df
+            if df.duplicated(subset=['snapshot_id']).sum()>0:
+                print('\n WARNING: a duplicate has been found in snapshots table! \n')
+            return df.drop_duplicates()
     except SQLAlchemyError as sql_ex:
         print(f"An error occured during database fetching, {sql_ex.args}")
     except Exception as ex:
         print(f"An error occured while converting data, {ex.args}")
 
-def groupby_weekly_bin(df: pd.DataFrame) -> pd.DataFrame:
-    df_grouped = df.groupby('weekly_bin')
-    number_of_incidents_zone = df_grouped.count()
-    number_of_incidents_time = df.grouped.count.where('''.....''')
-    #to implement search by time (weekly bin)
+def groupby_weekly_bin(df: pd.DataFrame, w_bin) -> pd.DataFrame:
+    #--- conditional probability parameter 
+    accidents = df[df['weekly_bin']==w_bin]
+    time_window = accidents['start_time'].max() - accidents['start_time'].min()
+    time_window = time_window.total_seconds()/604800 #total seconds in a week
+    time_slot_count = accidents.count()/time_window
+    print(time_slot_count)
+
+
+    
+
 
 #def incident_probability_index(place:coordinate):
     

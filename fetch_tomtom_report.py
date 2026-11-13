@@ -26,20 +26,28 @@ def get_reports() -> None:
     language = '&language=en-GB&t=-1'
     filter = '&timeValidityFilter=present'
     req_url = scheme + '://' + domain + path + '?' + key + bbox + fields + language + filter
-    print(req_url)
-    response = requests.get(req_url)
-    json_response = response.json()
-    response.raise_for_status()
+    #print(req_url)
+    try:
+        response = requests.get(req_url)
+        json_response = response.json()
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as ex:
+        print(f"HTTP error, {ex.args}")
 
     #to resolve duplicates problem with json_name
     import datetime
     data_of_fetch = datetime.datetime.now()
     json_string = 'json_file' + data_of_fetch.strftime('%M%S')
-    with open(json_string, 'w') as f:
-        json.dump(json_response,f, indent=2)
 
-    #moved here to automatically transfer data after fetch
-    db.data_transfer(json_string)
+    try:
+        with open(json_string, 'w') as f:
+            json.dump(json_response,f, indent=2)
 
-    #automatically removes the json file after data transfer
-    os.remove(json_string)
+        #moved here to automatically transfer data after fetch
+        db.data_transfer(json_string)
+        print('data transfered succesfully!')
+
+        #automatically removes the json file after data transfer
+        os.remove(json_string)
+    except Exception as ex:
+        print(f"Something went wrong while data trasnfer: {ex.args}")

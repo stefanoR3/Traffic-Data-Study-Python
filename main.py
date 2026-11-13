@@ -22,9 +22,17 @@ class coordinate:
 #pd_mod.clean_dataFrame(df)
 #print(df['end_time'])
 #print(df['id'].duplicated())
-df = pd_mod.groupby_timezone(26.25403914745,44.4531995306)
-pd_mod.groupby_weekly_bin(df)
+#pd_mod.groupby_weekly_bin(df,5)
 #print(df.head().to_string())
+
+#---GENERIC DF DEBUG---
+#df = pd_mod.initialize_generic_df()
+#print(df.duplicated(subset=['snapshot_id']).sum())
+
+#---GROUP BY TIMEZONE DEBUG---
+df = pd_mod.groupby_timezone(26.25403914745,44.4531995306)
+print(df.head().to_string())
+pd_mod.groupby_weekly_bin(df, 'Tue_10') #same ser as group above
 
 #db.print_events()
 #print(db.metadata_obj.tables.keys())
