@@ -171,7 +171,7 @@ def data_transfer(json_string) -> None:
                         center_lat = (n+s)/2
                         center_lon = (e+w)/2
                         stmt = insert(snapshot_coordinates).values(snapshot_id=snap_id, north=n, south=s, east=e, west=w,
-                        center_latitude=center_lat,center_longitude=center_lon).prefix_with('OR IGNORE')
+                        center_latitude=center_lat,center_longitude=center_lon).prefix_with('OR IGNORE') #for duplicates
                         conn.execute(stmt)
                     except Exception as ex:
                         print(f"error at coordinates: {ex.args}")
@@ -186,7 +186,13 @@ def data_transfer(json_string) -> None:
                 print(ex.args)
                 return
 
-                 
+def number_of_records():
+    with engine.connect() as conn:
+        stmt = select(incidents_table)
+        result = conn.execute(stmt)
+        data = len([row for row in result])
+        print(data)
+        
 
 
     

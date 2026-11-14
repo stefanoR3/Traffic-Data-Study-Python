@@ -90,6 +90,7 @@ def initialize_category_count_dataFrame() -> pd.DataFrame:
 def weekly_bin(date_value:datetime.date):
     #function that assigns weekly_bin series to df
     day:str = date_value.strftime("%A")
+    day = day[0:3]
     hour = date_value.hour
     return f"{str(day)}_{str(hour)}"
 
@@ -110,34 +111,80 @@ def groupby_timezone(lat:float, lon:float, offset:float = 0.001) -> pd.DataFrame
             result = conn.execute(stmt) #result = cursor(iterator) pointing to the next row
             #convert all rows into a dictionary inside a list
             data = [row._asdict() for row in result] #list comprehension
-            print(data)
             df = pd.DataFrame(data)
+            df.drop_duplicates(subset=['main_id'], inplace=True) #keeps the first occurence
+            print(f'number of accidents on segment {lat}-{lon}: {len(df)}')
+            if df.empty:
+                print('no records have been found')
+                return
             clean_dataFrame(df)
+
             #hour(0-23), dow(1-7), combined = 168 combinations
             df['weekly_bin'] = df['start_time'].apply(weekly_bin)
+            print(df['weekly_bin'])
             if df.duplicated(subset=['snapshot_id']).sum()>0:
                 print('\n WARNING: a duplicate has been found in snapshots table! \n')
-            return df.drop_duplicates()
+            return df
+        
     except SQLAlchemyError as sql_ex:
         print(f"An error occured during database fetching, {sql_ex.args}")
+        return
     except Exception as ex:
         print(f"An error occured while converting data, {ex.args}")
+        return
 
 def groupby_weekly_bin(df: pd.DataFrame, w_bin) -> pd.DataFrame:
+    #N_incidents(s | t): "we had x crashes here on Friday 5 AM"
+    #N_intervals(s,t): "We have 12 Fridays of data"
+    #Conditional rate P(A | s,t): On Friday 5 AM: 1.5 crashes per hour
+    #Baseline rate P(A | s): overall, this segment gets  0.4 crashes per hour
+    #IPI: 3.75: Friday at 5 AM is 3.75 times riskier (275%) than a tipica hour on this road segment
+
+    print(f"location: {df.loc[0]['frm']}")
+
+    #--- total monitored hours
+    generic_df = initialize_generic_df()
+    total_time = 14 #TO FIX!!!
+    total_weeks = total_time/7
+    total_hours = total_time*24
+    print(f"total time in weeks: {int(total_weeks)}")
+    print(f"total time in hours: {total_hours}")
+    
     #--- conditional probability parameter 
-    accidents = df[df['weekly_bin']==w_bin]
-    time_window = accidents['start_time'].max() - accidents['start_time'].min()
-    time_window = time_window.total_seconds()/604800 #total seconds in a week
-    time_slot_count = accidents.count()/time_window
-    print(time_slot_count)
+    try:
+        if not isinstance(df, pd.DataFrame):
+            raise ValueError('no reports found for this coordinates!')
+        bin_accidents = len(df[df['weekly_bin']==w_bin]) # N_incidents(s,t)
+        print(f"number of bin accidents: {bin_accidents}")
+        conditional_rate = bin_accidents/total_weeks #P(A | s,t) specific accident per hour rate
+        print(f"conditional rate: {bin_accidents}/{int(total_weeks)} = {str(conditional_rate)[0:4]} accidents per hour\n")
 
+    except ValueError as value_ex:
+        print(f'error while parsing data: {value_ex}')
+        return
+    except ZeroDivisionError as zero_ex:
+        print('this accident reports all occured at the same moment!')
+        return
+    except Exception as ex:
+        print(f'an error occured while calculating conditional probability: {ex.args}')
+        return
 
-    
+    #--- baseline probability parameter
+    try:
+        all_accidents = len(df) #N_incidents_total(s)
+        print(f"number of all accidents: {all_accidents}")
+        baseline_rate = all_accidents/total_hours #P(A | s) avarage accident per hour rate
+        print(f"baseline rate: {all_accidents}/{total_hours} = {str(baseline_rate*100)[0:4]} accidents per hour") #all accidents on segment
+    except Exception as ex:
+        print(f'an error occured while calculating conditional probability: {ex.args}')
+        return
 
+    #--- final probability: 1 = avarage risk, >1 elevated risk
 
-#def incident_probability_index(place:coordinate):
-    
-#def initialize_impac_radius_dataFrame() -> pd.dataFrame:
+    #(accidents per hour on specific hour-segment)\(aciddent per hour on segment)
+    #ratio may be big due to small dataset(accidents per street = a) 3 small nr -> high prob, b) 300 small prob)
+    IPI = conditional_rate/baseline_rate
+    print(f"final probability = {str(IPI)[0:5]} times as risky as normal")
 
 
 
